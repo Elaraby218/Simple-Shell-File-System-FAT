@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace Cline
 {
-    internal class Shared_Values
+    internal static class Shared_Values
     {
+        
         public static string Command;
         public static List<string> Arguments = new List<string>() ;
+
         public static Dictionary<string, List<string>> Commands_Args = new Dictionary<string, List<string>>();
-        public Shared_Values()
+        static public void ini()
         {
             List<string> args = new List<string>();
             Commands_Args.Add("cls", args);
-
             args.Add("cls");
             args.Add("help");
             args.Add("quit");
@@ -29,7 +30,7 @@ namespace Cline
 
         public static void Rmv_spcs(string inputt_)
         {
-            string[] parts = inputt_.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = inputt_.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);          
             foreach (string part in parts)
             {
                 Shared_Values.Arguments.Add(part.Trim());

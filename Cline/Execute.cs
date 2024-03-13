@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cline
 {
-    internal class Execute
+    internal static class Execute
     {
         public static void cls()
         {
@@ -17,9 +17,18 @@ namespace Cline
         {
             // Static dictionary for holding help information
             Dictionary<string, string> helpDictionary = new Dictionary<string, string>{
-                                     {"help", "Display information about the commands"},
-                                     {"cls", "Clear the Console"},
-                                     {"quit", "Exit the Console"}};
+            {"help", "Display information about the commands"},
+            {"cls", "Clear the Console"},
+            {"quit", "Exit the Console"},
+            {"cd", "Change the current default directory"},
+            {"copy", "Copies one or more files to another location"},
+            {"del", "Deletes one or more files"},
+            {"md", "Creates a directory"},
+            {"rd", "Remove directory"},
+            {"rename", "Renames a file"},
+            {"type", "Displays the contents of a text file"},
+            {"import", "Improt text file from your computer"},
+            {"export", "export text file to your computer"}};
 
             Shared_Values.Arguments = Shared_Values.Arguments.Distinct().ToList(); // 
             if (Shared_Values.Arguments.Count == 0)

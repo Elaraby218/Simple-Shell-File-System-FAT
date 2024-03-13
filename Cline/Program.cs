@@ -4,20 +4,22 @@
     {
         static void Main(string[] args)
         {
-            Shared_Values sh = new Shared_Values();
+            Shared_Values.ini();
+            Virtual_Disk.Initialize();
+           
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");
                 string inputt_ = Console.ReadLine();
-
-                Shared_Values.Rmv_spcs(inputt_);
-               
+                if (string.IsNullOrEmpty(inputt_) || string.IsNullOrWhiteSpace(inputt_))  continue;
+                Shared_Values.Rmv_spcs(inputt_); 
+                
                 if (Shared_Values.Command == "quit") break;
                 else
                 {
                     if (Shared_Values.Is_Command(Shared_Values.Command))
                     {
-                        Shared_Values.Arguments.RemoveAt(0);
+                        Shared_Values.Arguments.RemoveAt(0);   
                         if (Shared_Values.Is_arguments(Shared_Values.Arguments))
                         {
                             Shared_Values.ExcuteCommand();
