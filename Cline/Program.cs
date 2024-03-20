@@ -6,7 +6,9 @@
         {
             Shared_Values.ini();
             Virtual_Disk.Initialize();
-      
+
+            Directory_Entry root = new Directory_Entry("EEEXAAMPLEEEEE.txt", 0, 0, 0);
+            root.ToString();
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");

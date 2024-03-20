@@ -89,6 +89,14 @@ namespace Cline
             return directory_Entry;
         }
 
+        public void ToString()
+        {
+            Console.WriteLine($"Name: {new string(this.name)}");
+            Console.WriteLine($"Attribute: {this.attribute}");
+            Console.WriteLine($"Size: {this.size}");
+            Console.WriteLine($"Starting Cluster: {this.starting_cluster}");
+        }
+
         
     }
 }
