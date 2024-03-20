@@ -6,7 +6,7 @@
         {
             Shared_Values.ini();
             Virtual_Disk.Initialize();
-           
+      
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");
