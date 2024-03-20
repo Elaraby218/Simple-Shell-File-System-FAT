@@ -1,5 +1,7 @@
 ﻿namespace Cline
 {
+
+
     internal class Program
     {
         static void Main(string[] args)
@@ -7,7 +9,8 @@
             Shared_Values.ini();
             Virtual_Disk.Initialize();
 
-            Directory_Entry root = new Directory_Entry("EEEXAAMPLEEEEE.txt", 0, 0, 0);
+            Directory_Entry root = new Directory_Entry("EE.txt", 0, 0, 0);
+            root = root.Convert_Byte_To_Directory_Entry(root.Convert_Directory_Entry());
             root.ToString();
             while (true)
             {
