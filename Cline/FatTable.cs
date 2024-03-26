@@ -95,7 +95,7 @@ namespace Cline
             return Fat_Table[idx];
         }
 
-        public static void SetVal(int val, int idx)
+        public static void SetVal(int idx, int val) 
         {
             Fat_Table[idx] = val;
         }

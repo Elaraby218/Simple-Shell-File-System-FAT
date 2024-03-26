@@ -44,7 +44,7 @@ namespace Cline
         }
 
 
-        public byte[] Convert_Directory_Entry()
+        public byte[] DirectoryEntryToByte()
         {
             byte[] data = new byte[32];
 
@@ -71,7 +71,7 @@ namespace Cline
             return data;
         }
 
-       public Directory_Entry Convert_Byte_To_Directory_Entry(byte[] data)
+       public Directory_Entry ByteToDirectoryEntry(byte[] data)
         {
 
 
