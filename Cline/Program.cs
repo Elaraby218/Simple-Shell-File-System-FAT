@@ -11,9 +11,8 @@ namespace Cline
         public static void Main(string[] args)
         {
             
-            //Shared_Values.ini();
-            //Virtual_Disk.Initialize();
-
+            Shared_Values.ini();
+            Virtual_Disk.Initialize();
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");
@@ -21,7 +20,10 @@ namespace Cline
                 if (string.IsNullOrEmpty(inputt_) || string.IsNullOrWhiteSpace(inputt_))  continue;
                 Shared_Values.Rmv_spcs(inputt_); 
                 
-                if (Shared_Values.Command == "quit") break;
+                if (Shared_Values.Command == "quit")
+                {
+                   Shared_Values.ExcuteCommand();
+                }
                 else
                 {
                     if (Shared_Values.Is_Command(Shared_Values.Command))

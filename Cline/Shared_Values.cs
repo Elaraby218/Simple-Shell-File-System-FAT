@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,9 @@ namespace Cline
             args.Clear();
 
             Commands_Args.Add("quit", args);
+            args.Clear();
+
+            Commands_Args.Add("md", args);
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -55,6 +59,8 @@ namespace Cline
         {
             if (Command == "cls") Execute.cls();
             if (Command == "help") Execute.help();
+            if (Command == "quit") Execute.quit();
+            if (Command == "md") Execute.md(Shared_Values.Arguments[0].ToString());
         }
        
     }
