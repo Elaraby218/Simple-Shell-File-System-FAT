@@ -104,9 +104,24 @@ namespace Cline
             }
 
             // update the parent directory
+            if (this.Parent != null)
+            {
+                this.Parent.UpdateParent(this.GetCurBase());
+                this.Parent.WriteDirectory();
+            }
 
             FatTable.WriteFatTable();
 
+        }
+
+        public void UpdateParent(Directory_Entry old)
+        {
+            int idx = this.SearchDir(new string(old.name));
+            if (idx != -1)
+            {
+                DirectoryTable.RemoveAt(idx);
+                DirectoryTable.Insert(idx, old);
+            }
         }
 
         public void ReadDirectory()
@@ -116,31 +131,31 @@ namespace Cline
                 int CurrentCluster = this.starting_cluster;
                 int NextCluster = FatTable.GetVal(CurrentCluster);
 
-                List<byte> List_OF_Bytes= new List<byte>();
+                List<byte> List_OF_Bytes = new List<byte>();
                 List<Directory_Entry> DT = new List<Directory_Entry>();
 
                 do
                 {
                     List_OF_Bytes.AddRange(Virtual_Disk.ReadBlock(CurrentCluster));
                     CurrentCluster = NextCluster;
-                    if(CurrentCluster != -1)
+                    if (CurrentCluster != -1)
                     {
                         NextCluster = FatTable.GetVal(CurrentCluster);
                     }
-                } while(NextCluster != -1);
+                } while (NextCluster != -1);
 
-                for(int i=0; i<List_OF_Bytes.Count; i += 32)
+                for (int i = 0; i < List_OF_Bytes.Count; i += 32)
                 {
                     byte[] temp = new byte[32];
-                    for(int k = i*32 , m=0; m<temp.Length && k<List_OF_Bytes.Count; m++,k++)
+                    for (int k = i * 32, m = 0; m < temp.Length && k < List_OF_Bytes.Count; m++, k++)
                     {
                         temp[m] = List_OF_Bytes[k];
-                        
+
                     }
                     if (temp[0] == 0)
                     {
                         break;
-                    }   
+                    }
                     DT.Add(ByteToDirectoryEntry(temp));
                 }
             }
@@ -175,6 +190,7 @@ namespace Cline
             }
             return -1;
         }
+
 
 
 

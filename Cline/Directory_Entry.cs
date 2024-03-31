@@ -121,6 +121,11 @@ namespace Cline
             };
         }
 
+        public Directory_Entry GetCurBase()
+        {
+            return this; 
+        }
+
         public void ToString()
         {
             Console.WriteLine($"Name: {new string(this.name)} + {this.name.Length}");
