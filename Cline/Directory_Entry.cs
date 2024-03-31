@@ -121,7 +121,10 @@ namespace Cline
             };
         }
 
-     
+        public Directory_Entry GetCur()
+        {
+            return this; 
+        }
 
         public void ToString()
         {
