@@ -191,6 +191,40 @@ namespace Cline
             return -1;
         }
 
+        public void DeleteDirectory(string DirName)
+        {
+            if (this.starting_cluster == 0)
+            {
+                Console.WriteLine("Directory not found");
+                return;
+            }
+            else
+            {
+                int CurrnetCLuster = this.starting_cluster;
+                int NextCluster = -1;
+                do
+                {
+                    NextCluster = FatTable.GetVal(CurrnetCLuster);
+                    FatTable.SetVal(CurrnetCLuster, 0);
+                    CurrnetCLuster = NextCluster;
+
+                } while (NextCluster != -1);
+
+                if(this.Parent != null)
+                {
+                    this.Parent.ReadDirectory();
+                    int idx = this.Parent.SearchDir(new string(this.name));
+                    if(idx != -1)
+                    {
+                        this.Parent.DirectoryTable.RemoveAt(idx);
+                        this.Parent.WriteDirectory();
+                    }
+                }
+                FatTable.WriteFatTable();
+            }
+
+        }
+
 
 
 
