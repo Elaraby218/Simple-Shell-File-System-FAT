@@ -121,10 +121,7 @@ namespace Cline
             };
         }
 
-        public Directory_Entry GetCurBase()
-        {
-            return this; 
-        }
+     
 
         public void ToString()
         {
