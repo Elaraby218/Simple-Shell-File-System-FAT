@@ -1,17 +1,19 @@
-﻿namespace Cline
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Cline
 {
 
 
     internal class Program
     {
-        static void Main(string[] args)
+        public static Directory CurrentDirectory;
+        public static string  Path = "" ; 
+        public static void Main(string[] args)
         {
-            Shared_Values.ini();
-            Virtual_Disk.Initialize();
+            
+            //Shared_Values.ini();
+            //Virtual_Disk.Initialize();
 
-            Directory_Entry root = new Directory_Entry("EE.txt", 0, 0, 0);
-            root = root.Convert_Byte_To_Directory_Entry(root.Convert_Directory_Entry());
-            root.ToString();
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");

@@ -25,21 +25,58 @@ namespace Cline
 
         public Directory_Entry(){  }
 
+        public void DirName(char[] name)
+        {
+            int maxLength = 11; 
+            int nameLength = Math.Min(name.Length, maxLength);
+            Array.Copy(name, this.name, nameLength);
+            // Fill the remaining space with spaces
+            for (int i = nameLength; i < maxLength; i++)
+            {
+                this.name[i] = ' ';
+            }
+        }
+
+        public void FileName(char[] name, char[] ext)
+        {
+            int maxLength = 8; // Maximum length for DOS filenames
+            int extLength = 3; // Length of file extension
+
+            if (name.Length <= 7 && ext.Length == 3)
+            {
+                Array.Copy(name, 0, this.name, 0, Math.Min(name.Length, maxLength - extLength - 1));
+                this.name[Math.Min(name.Length, maxLength - extLength - 1)] = '.';
+                Array.Copy(ext, 0, this.name, Math.Min(name.Length, maxLength - extLength), Math.Min(ext.Length, extLength));
+            }
+            else
+            {
+                Array.Copy(name, 0, this.name, 0, Math.Min(name.Length, maxLength - extLength - 1));
+                this.name[Math.Min(name.Length, maxLength - extLength - 1)] = '.';
+                Array.Copy(ext, 0, this.name, maxLength - extLength, Math.Min(ext.Length, extLength));
+            }
+
+            // Fill the remaining space with spaces
+            for (int i = name.Length + ext.Length; i < maxLength; i++)
+            {
+                this.name[i] = ' ';
+            }
+        }
+
+        // i changed the funcitno of name to fill the empty cells with spaces 
         public Directory_Entry(string name, byte attribute, int size, int starting_cluster)
         {
             this.attribute = attribute;
             this.size = size;
             this.starting_cluster = ( (starting_cluster == 0) ? FatTable.First_Ava_Block() : starting_cluster );
 
-            if (this.attribute == 0)
+            if (this.attribute == 0) // file 
             {
-                this.name = (name.Length > 11) ?
-                            (name.Substring(0,7) + name.Substring(name.Length - 4)).ToCharArray() :
-                            name.ToCharArray();
+                string[] filename = name.Split('.');
+                FileName(filename[0].ToCharArray(), filename[1].ToCharArray());
             }
             else
             {
-                this.name = name.Substring(0, Math.Min(name.Length, 11)).ToCharArray();
+                DirName(name.ToCharArray());
             }
         }
 

@@ -10,6 +10,7 @@ namespace Cline
     {
         private static string filePath = Environment.CurrentDirectory + "\\Data.txt";
         public  static FileStream fs;
+        public static Directory Root;
 
         private static void SetBlock(int NumB, char Chr)
         {
@@ -33,10 +34,17 @@ namespace Cline
                 }
                 FatTable.Initialize();
                 FatTable.WriteFatTable();
+                Root = new Directory(filePath, 0, 0, 5, null);
+                Root.WriteDirectory();
+                Program.CurrentDirectory = Root;
             }
             else
             {
                 FatTable.ReadFatTable();
+                Root = new Directory(filePath, 0, 0, 5, null);
+                Root.ReadDirectory();   // it will be implemented later
+                Program.CurrentDirectory = Root;
+
             }
         }
 
