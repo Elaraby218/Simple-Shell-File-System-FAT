@@ -113,5 +113,31 @@ namespace Cline
             }
         }
 
+        public static void dir()
+        {
+            string name = " ";
+            int NumOfFiles = 0, NumOfFolders = 0, Totalsize = 0; 
+            for(int i=0; i<Program.CurrentDirectory.DirectoryTable.Count; i++)
+            {
+                if (Program.CurrentDirectory.DirectoryTable[i].attribute == 0x10)
+                {
+                    name = new string(Program.CurrentDirectory.DirectoryTable[i].name);
+                    Console.WriteLine($"{name,-50} <DIR>");
+                    NumOfFolders++;
+                }
+                else
+                {
+                    name = new string(Program.CurrentDirectory.DirectoryTable[i].name);
+                    Console.WriteLine($"{name,-50} {Program.CurrentDirectory.DirectoryTable[i].size} bytes");
+                    NumOfFiles++;
+                    Totalsize += Program.CurrentDirectory.DirectoryTable[i].size;
+                }
+            }
+            Console.WriteLine("");
+            Console.WriteLine($"<DIR(s)> {NumOfFolders,-10} File(s) {NumOfFiles,-10}  {Totalsize}Bytes");
+            Console.WriteLine("");
+
+        }
+
     }
 }

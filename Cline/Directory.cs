@@ -188,7 +188,6 @@ namespace Cline
                     {
                         break;
                     }
-
                     Directory_Entry entry = ByteToDirectoryEntry(temp);
                     DT.Add(entry);
                 }
