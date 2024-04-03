@@ -8,11 +8,14 @@ namespace Cline
     {
         public static Directory CurrentDirectory;
         public static string  Path = "" ; 
+        
         public static void Main(string[] args)
         {
             
             Shared_Values.ini();
             Virtual_Disk.Initialize();
+            CurrentDirectory.printtable();
+            FatTable.PrintFatTable();
             while (true)
             {
                 Console.Write(Cur_location() + ":\\> ");

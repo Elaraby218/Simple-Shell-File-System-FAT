@@ -62,21 +62,54 @@ namespace Cline
 
         public static void md(string dirName)
         {
-            if(Program.CurrentDirectory.SearchDir(dirName)==-1)
+            if (Program.CurrentDirectory.SearchDir(dirName) == -1)
             {
-                Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
-                Program.CurrentDirectory.DirectoryTable.Add(newDir);
-                Program.CurrentDirectory.WriteDirectory();
-                if(Program.CurrentDirectory.Parent!=null)
+                if (Program.CurrentDirectory.starting_cluster == 0)
                 {
-                    Program.CurrentDirectory.Parent.UpdateParent(Program.CurrentDirectory.Parent);
-                    Program.CurrentDirectory.Parent.WriteDirectory();
+                    Program.CurrentDirectory.starting_cluster = FatTable.First_Ava_Block();
                 }
-                Console.WriteLine($"Directory '{dirName}' created successfully");
+                else
+                {
+                    Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
+                    Program.CurrentDirectory.DirectoryTable.Add(newDir);
+                    Program.CurrentDirectory.WriteDirectory();
+
+                    //if (Program.CurrentDirectory.Parent != null)
+                    //{
+                    //    // polymerphism will handle everything
+                    //    // Program.CurrentDirectory.Parent.UpdateParent(Program.CurrentDirectory.Parent);
+                    //    Program.CurrentDirectory.Parent.WriteDirectory();
+                    //}
+                    Console.WriteLine($"Directory '{dirName}' created successfully");
+                }
             }
             else
             {
                 Console.WriteLine($"Directory '{dirName}' already exists");
+            }
+        }
+
+        public static void rd(string dirName)
+        {
+            int id = Program.CurrentDirectory.SearchDir(dirName);
+
+            if (id != -1)
+            {
+                int FirstCluster = Program.CurrentDirectory.DirectoryTable[id].starting_cluster;
+                int FileSize = Program.CurrentDirectory.DirectoryTable[id].size;
+
+                // Create a new Directory object
+                Directory directory = new Directory(dirName, 0x10,
+                        FileSize, FirstCluster, Program.CurrentDirectory);
+
+                // Delete the directory
+                directory.DeleteDirectory(dirName); // Assuming DeleteDirectory doesn't need dirName argument
+
+                Console.WriteLine($"Directory '{dirName}' deleted successfully");
+            }
+            else
+            {
+                Console.WriteLine($"Directory '{dirName}' not found");
             }
         }
 

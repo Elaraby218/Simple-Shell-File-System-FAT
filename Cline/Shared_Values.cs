@@ -9,9 +9,9 @@ namespace Cline
 {
     internal static class Shared_Values
     {
-        
+
         public static string Command;
-        public static List<string> Arguments = new List<string>() ;
+        public static List<string> Arguments = new List<string>();
 
         public static Dictionary<string, List<string>> Commands_Args = new Dictionary<string, List<string>>();
         static public void ini()
@@ -30,11 +30,15 @@ namespace Cline
             args.Clear();
 
             Commands_Args.Add("md", args);
+            args.Clear();
+
+            Commands_Args.Add("rd", args);
+            args.Clear();
         }
 
         public static void Rmv_spcs(string inputt_)
         {
-            string[] parts = inputt_.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);          
+            string[] parts = inputt_.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string part in parts)
             {
                 Shared_Values.Arguments.Add(part.Trim());
@@ -43,9 +47,9 @@ namespace Cline
         }
 
         public static bool Is_Command(string comm)
-        {   
-            if (Commands_Args.ContainsKey(comm))         
-                return true;  
+        {
+            if (Commands_Args.ContainsKey(comm))
+                return true;
             return false;
         }
         public static bool Is_arguments(List<string> arg)
@@ -61,7 +65,8 @@ namespace Cline
             if (Command == "help") Execute.help();
             if (Command == "quit") Execute.quit();
             if (Command == "md") Execute.md(Shared_Values.Arguments[0].ToString());
+            if (Command == "rd") Execute.rd(Shared_Values.Arguments[0].ToString());
         }
-       
+
     }
 }

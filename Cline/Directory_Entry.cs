@@ -67,7 +67,10 @@ namespace Cline
         {
             this.attribute = attribute;
             this.size = size;
-            this.starting_cluster = ( (starting_cluster == 0) ? FatTable.First_Ava_Block() : starting_cluster );
+
+            //this.starting_cluster = ( (starting_cluster == 0) ? FatTable.First_Ava_Block() : starting_cluster );
+            this.starting_cluster = starting_cluster; 
+            // when you need to put cluster fo directory call getavailblock when calling constructor ; 
 
             if (this.attribute == 0) // file 
             {
@@ -121,7 +124,7 @@ namespace Cline
             };
         }
 
-        public Directory_Entry GetCur()
+        public Directory_Entry GetCurBase()
         {
             return this; 
         }
