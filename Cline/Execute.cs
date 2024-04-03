@@ -68,20 +68,19 @@ namespace Cline
                 {
                     Program.CurrentDirectory.starting_cluster = FatTable.First_Ava_Block();
                 }
-                else
-                {
-                    Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
-                    Program.CurrentDirectory.DirectoryTable.Add(newDir);
-                    Program.CurrentDirectory.WriteDirectory();
 
-                    //if (Program.CurrentDirectory.Parent != null)
-                    //{
-                    //    // polymerphism will handle everything
-                    //    // Program.CurrentDirectory.Parent.UpdateParent(Program.CurrentDirectory.Parent);
-                    //    Program.CurrentDirectory.Parent.WriteDirectory();
-                    //}
-                    Console.WriteLine($"Directory '{dirName}' created successfully");
-                }
+                Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
+                Program.CurrentDirectory.DirectoryTable.Add(newDir);
+                Program.CurrentDirectory.WriteDirectory();
+
+                //if (Program.CurrentDirectory.Parent != null)
+                //{
+                //    // polymerphism will handle everything
+                //    // Program.CurrentDirectory.Parent.UpdateParent(Program.CurrentDirectory.Parent);
+                //    Program.CurrentDirectory.Parent.WriteDirectory();
+                //}
+                Console.WriteLine($"Directory '{dirName}' created successfully");
+
             }
             else
             {
@@ -115,9 +114,10 @@ namespace Cline
 
         public static void dir()
         {
+            Console.WriteLine();
             string name = " ";
-            int NumOfFiles = 0, NumOfFolders = 0, Totalsize = 0; 
-            for(int i=0; i<Program.CurrentDirectory.DirectoryTable.Count; i++)
+            int NumOfFiles = 0, NumOfFolders = 0, Totalsize = 0;
+            for (int i = 0; i < Program.CurrentDirectory.DirectoryTable.Count; i++)
             {
                 if (Program.CurrentDirectory.DirectoryTable[i].attribute == 0x10)
                 {
@@ -137,6 +137,41 @@ namespace Cline
             Console.WriteLine($"<DIR(s)> {NumOfFolders,-10} File(s) {NumOfFiles,-10}  {Totalsize}Bytes");
             Console.WriteLine("");
 
+        }
+
+        public static void cd(string dirName)
+        {
+            if(dirName == "..")
+            {
+                if(Program.CurrentDirectory.Parent != null)
+                {
+                    Program.CurrentDirectory = Program.CurrentDirectory.Parent;
+                    Program.Path = Program.Path.Substring(0, Program.Path.LastIndexOf("\\"));
+                }
+                else
+                {
+                    Console.WriteLine("You are in the root directory");
+                }
+                return;
+            }
+
+            int id = Program.CurrentDirectory.SearchDir(dirName);
+            if (id != -1)
+            {
+                int FirstCluster = Program.CurrentDirectory.DirectoryTable[id].starting_cluster;
+                int FileSize = Program.CurrentDirectory.DirectoryTable[id].size;
+
+                Directory directory = new Directory(dirName, 0x10,
+                                           FileSize, FirstCluster, Program.CurrentDirectory);
+
+                Program.CurrentDirectory = directory;
+                Program.Path+="\\";
+                Program.Path += dirName;
+            }
+            else
+            {
+                Console.WriteLine($"Directory '{dirName}' not found");
+            }
         }
 
     }

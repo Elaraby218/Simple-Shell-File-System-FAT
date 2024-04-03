@@ -7,7 +7,7 @@ namespace Cline
     internal class Program
     {
         public static Directory CurrentDirectory;
-        public static string  Path = "" ; 
+        public static string  Path = "root" ; 
         
         public static void Main(string[] args)
         {
@@ -18,7 +18,7 @@ namespace Cline
             FatTable.PrintFatTable();
             while (true)
             {
-                Console.Write(Cur_location() + ":\\> ");
+                Console.Write(Path + ":\\> ");
                 string inputt_ = Console.ReadLine();
                 if (string.IsNullOrEmpty(inputt_) || string.IsNullOrWhiteSpace(inputt_))  continue;
                 Shared_Values.Rmv_spcs(inputt_); 
@@ -57,5 +57,7 @@ namespace Cline
             string cur = Environment.CurrentDirectory;
             return cur;
         }
+
+       
     }
 }

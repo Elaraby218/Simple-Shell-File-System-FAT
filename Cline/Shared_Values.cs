@@ -37,6 +37,9 @@ namespace Cline
 
             Commands_Args.Add("dir", args);
             args.Clear();
+
+            Commands_Args.Add("cd", args);
+            args.Clear();
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -70,6 +73,7 @@ namespace Cline
             if (Command == "md") Execute.md(Shared_Values.Arguments[0].ToString());
             if (Command == "rd") Execute.rd(Shared_Values.Arguments[0].ToString());
             if (Command == "dir") Execute.dir();
+            if (Command == "cd") Execute.cd(Shared_Values.Arguments[0].ToString());
         }
 
     }
