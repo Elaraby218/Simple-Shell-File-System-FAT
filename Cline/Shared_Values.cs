@@ -67,12 +67,17 @@ namespace Cline
         }
         public static void ExcuteCommand()
         {
-            if (Command == "cls") Execute.cls();
-            if (Command == "help") Execute.help();
-            if (Command == "quit") Execute.quit();
+          //  if (Shared_Values.Arguments.Count == 0)
+          //  {
+                if (Command == "cls")  { Execute.cls() ; return; }
+                if (Command == "help") { Execute.help(); return; }
+                if (Command == "quit") { Execute.quit(); return; }
+                if (Command == "dir")  { Execute.dir() ; return; }
+          //      Console.WriteLine("No arguments provided");
+           //     return;
+         //   }
             if (Command == "md") Execute.md(Shared_Values.Arguments[0].ToString());
             if (Command == "rd") Execute.rd(Shared_Values.Arguments[0].ToString());
-            if (Command == "dir") Execute.dir();
             if (Command == "cd") Execute.cd(Shared_Values.Arguments[0].ToString());
         }
 

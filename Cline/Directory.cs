@@ -17,7 +17,7 @@ namespace Cline
 
 
         public Directory(string name, byte attribute, int size, int starting_cluster, Directory Parent)
-            : base(name, attribute, size, starting_cluster)
+                                                                  : base(name, attribute, size, starting_cluster)
         {
             DirectoryTable = new List<Directory_Entry>();
             if (Parent != null)
@@ -56,55 +56,42 @@ namespace Cline
 
         public void WriteDirectory()
         {
-            byte[] emtpyyy = new byte[1024];
+            byte[] dummy = new byte[1024];
             for (int i = 0; i < 1024; i++)
             {
-                emtpyyy[i] = (byte)'#';
+                dummy[i] = (byte)'#';
             }
-            if(this.starting_cluster!=0)
-            Virtual_Disk.WriteBlock(emtpyyy, this.starting_cluster);
+            Virtual_Disk.WriteBlock(dummy, this.starting_cluster);
             byte[] DirsOrFIleBytes = new byte[DirectoryTable.Count * 32]; // elgardel 32 bytes for each entry
             int CurrentCluster = this.starting_cluster;
             int LastCluster = -1;
-            if (this.starting_cluster == 0)
+
+
+            for (int i = 0; i < this.DirectoryTable.Count; i++)
             {
-                return;
-            }
-            // fill dirorfilebytes with the directory entries in bytes
-            int c = 0;
-            for (int i = 0; i < DirectoryTable.Count; i++)
-            {
-               // if (DirectoryTable[i].starting_cluster == 0)
-               // {
-               //    // c++;
-                   // continue;
-               // }
+                if (this.DirectoryTable[i].starting_cluster == 0)
+                {
+                    this.DirectoryTable[i].starting_cluster = FatTable.First_Ava_Block();
+                    FatTable.SetVal(this.DirectoryTable[i].starting_cluster, -1);
+                    FatTable.WriteFatTable();
+                }
                 byte[] temp = DirectoryTable[i].DirectoryEntryToByte();
                 for (int j = 0; j < 32; j++)
                 {
-                    DirsOrFIleBytes[((i - c) * 32 + j)] = temp[j];
+                    DirsOrFIleBytes[((i) * 32 + j)] = temp[j];
                 }
-
             }
 
-           // if (DirsOrFIleBytes.Length == 0)
-           // {
-           //     return;
-           // }
+            // if (DirsOrFIleBytes.Length == 0)
+            // {
+            //     return;
+            // }
 
             List<byte[]> Data = PrepData(DirsOrFIleBytes);
 
             // determine the starting cluster
-            if (this.starting_cluster != 0)
-            {
-                CurrentCluster = this.starting_cluster;
-            }
-            else
-            {
-                CurrentCluster = FatTable.First_Ava_Block();
-                this.starting_cluster = CurrentCluster;
-                // if there is no available blocks in the fat table it will return -1 
-            }
+            
+           
 
             // till now we have the data in the form of list of byte arrays
             // we know the first cluster we will write to
@@ -129,16 +116,7 @@ namespace Cline
                 LastCluster = CurrentCluster;
                 CurrentCluster = FatTable.First_Ava_Block();
             }
-
-            // update the parent directory
-            //if (this.Parent != null)
-            //{
-            //    this.Parent.UpdateParent(this.GetCurBase());
-            //    this.Parent.WriteDirectory();
-            //}
-
             FatTable.WriteFatTable();
-
         }
 
         public void UpdateParent(Directory_Entry old)
@@ -163,6 +141,8 @@ namespace Cline
         {
             if (this.starting_cluster != 0)
             {
+
+
                 int CurrentCluster = this.starting_cluster;
                 List<byte> List_OF_Bytes = new List<byte>();
                 List<Directory_Entry> DT = new List<Directory_Entry>();
@@ -184,7 +164,7 @@ namespace Cline
                     Array.Copy(List_OF_Bytes.ToArray(), i, temp, 0, 32);
 
                     // Assuming ByteToDirectoryEntry method is defined elsewhere
-                    if (temp[0] == '#' || temp[0]==0)
+                    if (temp[0] == '#' || temp[0] == 0)
                     {
                         break;
                     }
@@ -193,6 +173,7 @@ namespace Cline
                 }
                 this.DirectoryTable = DT;
             }
+
         }
         public int SearchDir(string name)
         {
@@ -225,56 +206,128 @@ namespace Cline
             return -1;
         }
 
-        public void DeleteDirectory(string DirName)
+
+        //public void DeleteDirectory(string DirName)
+        //{
+        //    if (this.Parent != null)
+        //    {
+        //        int idx = this.Parent.SearchDir(new string(this.name));
+        //        if (idx != -1)
+        //        {
+        //            this.Parent.DirectoryTable.RemoveAt(idx);
+        //            this.Parent.WriteDirectory();
+        //        }
+        //    }
+
+        //    //Console.WriteLine(this.starting_cluster);
+        //    FatTable.SetVal(this.starting_cluster, 0);
+        //    if (this.DirectoryTable.Count == 0)
+        //    {
+        //        FatTable.SetVal(this.starting_cluster, 0);
+        //        this.WriteDirectory();
+        //        return;
+        //    }
+
+        //    foreach (var dire in this.DirectoryTable)
+        //    {
+        //        if (dire.attribute == 0x10)
+        //        {
+        //            Directory directory = new Directory(new string(dire.name), dire.attribute, dire.size, dire.starting_cluster, this);
+        //            int CurrentCluster = this.starting_cluster;
+        //            int NextCluster = -1;
+        //            if (CurrentCluster != 0)
+        //            {
+        //                do
+        //                {
+        //                    NextCluster = FatTable.GetVal(CurrentCluster);
+        //                    FatTable.SetVal(CurrentCluster, 0);
+        //                    CurrentCluster = NextCluster;
+
+        //                } while (NextCluster != -1);
+        //            }
+        //            directory.DeleteDirectory(new string(dire.name));
+        //            directory.WriteDirectory();
+        //        }
+
+        //        // if it was file handle it later 
+        //    }
+        //    FatTable.WriteFatTable();
+
+        //    // Delete the directory entries from the parent directory
+        //    // Delete subdirectories and files within this directory (you need to implement this)
+
+
+        //    // Update the FAT table and write it back to disk
+
+        //}
+
+
+        public void DeleteDirectory(string DirNameD)
         {
-            Console.WriteLine(this.starting_cluster);
-
-
-            // Delete the directory entries from the parent directory
+            this.ReadDirectory();
+            if (this.DirectoryTable.Count > 0)
+            {
+                for (int i = 0; i < this.DirectoryTable.Count; i++)
+                {
+                    Directory todel = new Directory(new string(this.DirectoryTable[i].name),
+                                                                   this.DirectoryTable[i].attribute,
+                                                                                    this.DirectoryTable[i].size,
+                                                                                                this.DirectoryTable[i].starting_cluster, this);
+                    if (todel.attribute == 0x10)
+                    {
+                        todel.DeleteDirectory(new string(todel.name));
+                    }
+                }
+            }
             if (this.Parent != null)
             {
                 int idx = this.Parent.SearchDir(new string(this.name));
                 if (idx != -1)
                 {
-                   // this.name = null ;
-                   // this.attribute = 0;
-                   // this.starting_cluster = 0; 
-                   // this.size = 0;
                     this.Parent.DirectoryTable.RemoveAt(idx);
                     this.Parent.WriteDirectory();
                 }
             }
 
-            // Delete subdirectories and files within this directory (you need to implement this)
-            // For example, you might iterate over this directory's DirectoryTable and call DeleteDirectory or DeleteFile on each entry.
-
-            int CurrentCluster = this.starting_cluster;
-            int NextCluster = -1;
-            if (CurrentCluster != 0)
-            {
-                do
-                {
-                    NextCluster = FatTable.GetVal(CurrentCluster);
-                    FatTable.SetVal(CurrentCluster, 0);
-                    CurrentCluster = NextCluster;
-
-                } while (NextCluster != -1);
-            }
-
-            // Update the FAT table and write it back to disk
+            Virtual_Disk.WriteBlock(Virtual_Disk.EmptyBlock, this.starting_cluster);
+            FatTable.SetVal(this.starting_cluster, 0);
             FatTable.WriteFatTable();
-
-
+           
+            return;
         }
 
 
+        //public void DeleteDirectory(string DirNameD)
+        //{
+        //    // Delete subdirectories recursively
+        //    for (int i = 0; i < this.DirectoryTable.Count; i++)
+        //    {
+        //        Directory todel = new Directory(new string(this.DirectoryTable[i].name),
+        //                                         this.DirectoryTable[i].attribute,
+        //                                         this.DirectoryTable[i].size,
+        //                                         this.DirectoryTable[i].starting_cluster, this);
+        //        if (todel.attribute == 0x10)
+        //        {
+        //            todel.DeleteDirectory(new string(todel.name));
+        //        }
+        //    }
 
+        //    // Remove this directory entry from parent directory
+        //    if (this.Parent != null)
+        //    {
+        //        int idx = this.Parent.SearchDir(new string(this.name));
+        //        if (idx != -1)
+        //        {
+        //            this.Parent.DirectoryTable.RemoveAt(idx);
+        //            this.Parent.WriteDirectory();
+        //        }
+        //    }
 
-
-
-
+        //    // Free up cluster space occupied by this directory
+        //    FatTable.SetVal(this.starting_cluster, 0);
+        //    Virtual_Disk.WriteBlock(Virtual_Disk.EmptyBlock, this.starting_cluster);
+        //    FatTable.WriteFatTable();
+        //}
 
     }
-
-
 }

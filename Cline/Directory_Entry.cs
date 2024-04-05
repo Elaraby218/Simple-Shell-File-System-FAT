@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,7 +64,7 @@ namespace Cline
             }
         }
 
-        // i changed the funcitno of name to fill the empty cells with spaces 
+        // i changed the function of name to fill the empty cells with spaces 
         public Directory_Entry(string name, byte attribute, int size, int starting_cluster)
         {
             this.attribute = attribute;
@@ -123,6 +125,7 @@ namespace Cline
                 starting_cluster = BitConverter.ToInt32(data, 28),
             };
         }
+       
 
         public Directory_Entry GetCurBase()
         {

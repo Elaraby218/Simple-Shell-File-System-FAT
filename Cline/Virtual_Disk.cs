@@ -11,7 +11,7 @@ namespace Cline
         private static string filePath = Environment.CurrentDirectory + "\\Data.txt";
         public  static FileStream fs;
         public static Directory Root;
-
+        public static byte[] EmptyBlock = Encoding.ASCII.GetBytes(new string('#', 1024));
         private static void SetBlock(int NumB, char Chr)
         {
             byte[] Block0 = new byte[1024 * NumB];

@@ -64,23 +64,18 @@ namespace Cline
         {
             if (Program.CurrentDirectory.SearchDir(dirName) == -1)
             {
-                if (Program.CurrentDirectory.starting_cluster == 0)
+                Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
+                Program.CurrentDirectory.DirectoryTable.Add(newDir);           
+                Program.CurrentDirectory.WriteDirectory();
+         
+               
+                if (Program.CurrentDirectory.Parent != null)
                 {
-                    Program.CurrentDirectory.starting_cluster = FatTable.First_Ava_Block();
+                    Program.CurrentDirectory.Parent.WriteDirectory();
                 }
 
-                Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
-                Program.CurrentDirectory.DirectoryTable.Add(newDir);
                 Program.CurrentDirectory.WriteDirectory();
-
-                //if (Program.CurrentDirectory.Parent != null)
-                //{
-                //    // polymerphism will handle everything
-                //    // Program.CurrentDirectory.Parent.UpdateParent(Program.CurrentDirectory.Parent);
-                //    Program.CurrentDirectory.Parent.WriteDirectory();
-                //}
                 Console.WriteLine($"Directory '{dirName}' created successfully");
-
             }
             else
             {
@@ -103,6 +98,7 @@ namespace Cline
 
                 // Delete the directory
                 directory.DeleteDirectory(dirName); // Assuming DeleteDirectory doesn't need dirName argument
+                Program.CurrentDirectory.WriteDirectory();
 
                 Console.WriteLine($"Directory '{dirName}' deleted successfully");
             }
@@ -143,6 +139,7 @@ namespace Cline
         {
             if(dirName == "..")
             {
+               
                 if(Program.CurrentDirectory.Parent != null)
                 {
                     Program.CurrentDirectory = Program.CurrentDirectory.Parent;
@@ -165,8 +162,9 @@ namespace Cline
                                            FileSize, FirstCluster, Program.CurrentDirectory);
 
                 Program.CurrentDirectory = directory;
-                Program.Path+="\\";
+                Program.Path += "\\";
                 Program.Path += dirName;
+                Program.CurrentDirectory.ReadDirectory();
             }
             else
             {
