@@ -18,7 +18,7 @@ namespace Cline
             FatTable.PrintFatTable();
             while (true)
             {
-                Console.Write(Path + ":\\> ");
+                Console.Write(Path + " :\\> ");
                 string inputt_ = Console.ReadLine();
                 if (string.IsNullOrEmpty(inputt_) || string.IsNullOrWhiteSpace(inputt_))  continue;
                 Shared_Values.Rmv_spcs(inputt_); 

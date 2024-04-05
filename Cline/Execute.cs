@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -149,6 +150,51 @@ namespace Cline
                 {
                     Console.WriteLine("You are in the root directory");
                 }
+                return;
+            }
+
+            if (dirName.Contains('\\'))
+            {
+                List<string> path = dirName.Split('\\').ToList();
+                Directory curDir; 
+
+                if (dirName == "\\")
+                {
+                    Program.CurrentDirectory = Virtual_Disk.Root;
+                    Program.Path = "root";
+                    Program.CurrentDirectory.ReadDirectory();
+                    return;
+                }
+
+                if (dirName[0] == '\\')
+                {
+                    curDir = Program.CurrentDirectory;             
+                    path.RemoveAt(0);
+                }
+                else
+                    curDir = Virtual_Disk.Root;
+
+                curDir.ReadDirectory();
+                string newpath = "";
+
+                foreach( var item in path)
+                {
+                    int idx  = curDir.SearchDir(item);
+                    if (idx == -1)
+                    {
+                        Console.WriteLine($"Directory '{item}' not found in the given Path ... ");
+                        return;
+                    }
+                    Directory d = new Directory(item, 0x10, curDir.DirectoryTable[idx].size, 
+                                                              curDir.DirectoryTable[idx].starting_cluster, curDir);
+                    curDir = d;
+                    curDir.ReadDirectory();
+                    newpath += "\\";
+                    newpath += item;
+                }
+                Program.CurrentDirectory = curDir;
+                Program.Path += newpath;
+                Program.CurrentDirectory.ReadDirectory();
                 return;
             }
 
