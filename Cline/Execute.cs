@@ -248,7 +248,7 @@ namespace Cline
 
         }
 
-        public static void Export(string FileName, string Dest)
+        public static void export(string FileName, string Dest)
         {
             int idx = Program.CurrentDirectory.SearchDir(FileName);
             if (idx != -1)

@@ -80,6 +80,10 @@ namespace Cline
 
             if (Command == "cd" && IsArgFound) Execute.cd(Shared_Values.Arguments[0].ToString());
 
+            if (Command == "import" && IsArgFound) Execute.import(Shared_Values.Arguments[0].ToString());
+
+            if (Command == "export" && IsArgFound) Execute.export(Shared_Values.Arguments[0].ToString() , Shared_Values.Arguments[1].ToString());
+
             if (IsArgFound == false)
             {
                 Console.WriteLine("This command is require an argument ...");
