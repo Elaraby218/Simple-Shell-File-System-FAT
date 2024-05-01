@@ -57,16 +57,15 @@ namespace Cline
             byte[] contentInBytes = new byte[this.size];
             List<byte[]> ReadyData = new List<byte[]>(); // it will contain every block data , list of blocks
             int cluster = this.starting_cluster;
-            int i = 0;
             do
             {
                 contentInBytes = Virtual_Disk.ReadBlock(cluster);
                 ReadyData.Add(contentInBytes);
                 cluster = FatTable.GetVal(cluster); // get the next clusetr that the data is stored in
             }
-            while (cluster != -1); 
+            while (cluster != -1);
             // convert list of bytes into one array of bytes then convert it into string using BytesToContent function
-            this.content = BytesToContent(ReadyData.SelectMany(a => a).ToArray());
+            this.content = BytesToContent(ReadyData.SelectMany(a => a).Where(b => b != '#').ToArray());
         }
 
         // fuctnion to delete the file from the disk
