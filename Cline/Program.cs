@@ -14,8 +14,8 @@ namespace Cline
             
             Shared_Values.ini();
             Virtual_Disk.Initialize();
-            CurrentDirectory.printtable();
-            FatTable.PrintFatTable();
+            //CurrentDirectory.printtable();
+            //FatTable.PrintFatTable();
             while (true)
             {
                 Console.Write(Path + " :\\> ");

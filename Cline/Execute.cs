@@ -138,6 +138,7 @@ namespace Cline
 
         public static void cd(string dirName)
         {
+           
             if(dirName == "..")
             {
                
@@ -217,6 +218,8 @@ namespace Cline
                 Console.WriteLine($"Directory '{dirName}' not found");
             }
         }
+
+        public 
 
     }
 }
