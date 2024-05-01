@@ -67,18 +67,23 @@ namespace Cline
         }
         public static void ExcuteCommand()
         {
-          //  if (Shared_Values.Arguments.Count == 0)
-          //  {
-                if (Command == "cls")  { Execute.cls() ; return; }
-                if (Command == "help") { Execute.help(); return; }
-                if (Command == "quit") { Execute.quit(); return; }
-                if (Command == "dir")  { Execute.dir() ; return; }
-          //      Console.WriteLine("No arguments provided");
-           //     return;
-         //   }
-            if (Command == "md") Execute.md(Shared_Values.Arguments[0].ToString());
-            if (Command == "rd") Execute.rd(Shared_Values.Arguments[0].ToString());
-            if (Command == "cd") Execute.cd(Shared_Values.Arguments[0].ToString());
+
+            if (Command == "cls") { Execute.cls(); return; }
+            if (Command == "help") { Execute.help(); return; }
+            if (Command == "quit") { Execute.quit(); return; }
+            if (Command == "dir") { Execute.dir(); return; }
+
+            bool IsArgFound = (Shared_Values.Arguments.Count > 0);
+            if (Command == "md" && IsArgFound) Execute.md(Shared_Values.Arguments[0].ToString());
+
+            if (Command == "rd" && IsArgFound) Execute.rd(Shared_Values.Arguments[0].ToString());
+
+            if (Command == "cd" && IsArgFound) Execute.cd(Shared_Values.Arguments[0].ToString());
+
+            if (IsArgFound == false)
+            {
+                Console.WriteLine("This command is require an argument ...");
+            }
         }
 
     }
