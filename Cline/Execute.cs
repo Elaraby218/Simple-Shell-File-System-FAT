@@ -247,5 +247,30 @@ namespace Cline
             }
 
         }
+
+        public static void Export(string FileName, string Dest)
+        {
+            int idx = Program.CurrentDirectory.SearchDir(FileName);
+            if (idx != -1)
+            {
+                string content = string.Empty; // ensure content is not null
+                FileEntry file = new FileEntry(
+                    FileName,
+                    Program.CurrentDirectory.DirectoryTable[idx].attribute,
+                    Program.CurrentDirectory.DirectoryTable[idx].size,
+                    Program.CurrentDirectory.DirectoryTable[idx].starting_cluster,
+                    Program.CurrentDirectory,
+                    content
+                );
+                file.ReadFile();
+                string filePath = Path.Combine(Dest, FileName); // create a validate path
+                File.WriteAllText(filePath, file.content);
+            }
+            else
+            {
+                Console.WriteLine("File not found");
+            }
+        }
+
     }
 }
