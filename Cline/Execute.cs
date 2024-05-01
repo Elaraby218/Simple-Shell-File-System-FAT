@@ -109,6 +109,39 @@ namespace Cline
             }
         }
 
+        public static void del(string FIleName)
+        {
+            // it must be in the directory that file in to be able to delete the file 
+            int idx = Program.CurrentDirectory.SearchDir(FIleName);
+            if (idx != -1)
+            {
+                if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)
+                {
+                    string FileName = new string(Program.CurrentDirectory.DirectoryTable[idx].name);
+                    FileEntry file = new FileEntry(
+                        FileName,
+                        Program.CurrentDirectory.DirectoryTable[idx].attribute,
+                        Program.CurrentDirectory.DirectoryTable[idx].size, 
+                        Program.CurrentDirectory.DirectoryTable[idx].starting_cluster, 
+                        Program.CurrentDirectory,
+                        string.Empty
+                    );
+                    file.DeleteFile();
+                    Program.CurrentDirectory.DirectoryTable.RemoveAt(idx);
+                    Program.CurrentDirectory.WriteDirectory();
+                    Console.WriteLine($"File '{FIleName}' deleted successfully ... ");
+                }
+                else
+                {
+                    Console.WriteLine($"'{FIleName}' is not a file ... ");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"File '{FIleName}' not found ... ");
+            }
+        }
+
         public static void dir()
         {
             Console.WriteLine();
@@ -125,7 +158,8 @@ namespace Cline
                 else
                 {
                     name = new string(Program.CurrentDirectory.DirectoryTable[i].name);
-                    Console.WriteLine($"{name,-50} {Program.CurrentDirectory.DirectoryTable[i].size} bytes");
+                    Console.Write($"{name,-50} <FILE>");
+                    Console.WriteLine($"{string.Empty,-20}{Program.CurrentDirectory.DirectoryTable[i].size} bytes");
                     NumOfFiles++;
                     Totalsize += Program.CurrentDirectory.DirectoryTable[i].size;
                 }
