@@ -66,10 +66,10 @@ namespace Cline
             if (Program.CurrentDirectory.SearchDir(dirName) == -1)
             {
                 Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
-                Program.CurrentDirectory.DirectoryTable.Add(newDir);           
+                Program.CurrentDirectory.DirectoryTable.Add(newDir);
                 Program.CurrentDirectory.WriteDirectory();
-         
-               
+
+
                 if (Program.CurrentDirectory.Parent != null)
                 {
                     Program.CurrentDirectory.Parent.WriteDirectory();
@@ -138,11 +138,11 @@ namespace Cline
 
         public static void cd(string dirName)
         {
-           
-            if(dirName == "..")
+
+            if (dirName == "..")
             {
-               
-                if(Program.CurrentDirectory.Parent != null)
+
+                if (Program.CurrentDirectory.Parent != null)
                 {
                     Program.CurrentDirectory = Program.CurrentDirectory.Parent;
                     Program.Path = Program.Path.Substring(0, Program.Path.LastIndexOf("\\"));
@@ -157,7 +157,7 @@ namespace Cline
             if (dirName.Contains('\\'))
             {
                 List<string> path = dirName.Split('\\').ToList();
-                Directory curDir; 
+                Directory curDir;
 
                 if (dirName == "\\")
                 {
@@ -169,7 +169,7 @@ namespace Cline
 
                 if (dirName[0] == '\\')
                 {
-                    curDir = Program.CurrentDirectory;             
+                    curDir = Program.CurrentDirectory;
                     path.RemoveAt(0);
                 }
                 else
@@ -178,15 +178,15 @@ namespace Cline
                 curDir.ReadDirectory();
                 string newpath = "";
 
-                foreach( var item in path)
+                foreach (var item in path)
                 {
-                    int idx  = curDir.SearchDir(item);
+                    int idx = curDir.SearchDir(item);
                     if (idx == -1)
                     {
                         Console.WriteLine($"Directory '{item}' not found in the given Path ... ");
                         return;
                     }
-                    Directory d = new Directory(item, 0x10, curDir.DirectoryTable[idx].size, 
+                    Directory d = new Directory(item, 0x10, curDir.DirectoryTable[idx].size,
                                                               curDir.DirectoryTable[idx].starting_cluster, curDir);
                     curDir = d;
                     curDir.ReadDirectory();
@@ -219,7 +219,33 @@ namespace Cline
             }
         }
 
-        public 
+        public static void import(string Src)
+        {
+            if (File.Exists(Src))
+            {
+                string SrcContent = File.ReadAllText(Src);
+                string FileName = Src.Substring(Src.LastIndexOf("\\") + 1);
+                int size = SrcContent.Length;
+                int idx = Program.CurrentDirectory.SearchDir(FileName);
 
+                if(idx == -1)
+                {
+                    int cluster = FatTable.First_Ava_Block();
+                    FileEntry NewFile = new FileEntry(FileName, 0x20, size, cluster, Program.CurrentDirectory , SrcContent);
+                    NewFile.WriteFile();
+                    Program.CurrentDirectory.DirectoryTable.Add(new Directory_Entry(FileName, 0x20, size, cluster));
+                    Program.CurrentDirectory.WriteDirectory();
+                }
+                else
+                {
+                    Console.WriteLine("File with the same name is already exists ... ");
+                }
+            }
+            else
+            {
+                Console.WriteLine("File not found");
+            }
+
+        }
     }
 }
