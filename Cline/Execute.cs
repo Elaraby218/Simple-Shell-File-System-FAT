@@ -127,8 +127,6 @@ namespace Cline
                         string.Empty
                     );
                     file.DeleteFile();
-                    Program.CurrentDirectory.DirectoryTable.RemoveAt(idx);
-                    Program.CurrentDirectory.WriteDirectory();
                     Console.WriteLine($"File '{FIleName}' deleted successfully ... ");
                 }
                 else
