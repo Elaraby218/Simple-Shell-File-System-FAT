@@ -50,6 +50,9 @@ namespace Cline
             Commands_Args.Add("del", args);
             args.Clear();
 
+            Commands_Args.Add("type", args);
+            args.Clear(); 
+
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -96,10 +99,16 @@ namespace Cline
 
             if (Command == "del" && IsArgFound) Execute.del(Shared_Values.Arguments[0].ToString());
 
+            if (Command == "type" && IsArgFound) Execute.type(Shared_Values.Arguments[0].ToString()); 
+
             if (IsArgFound == false)
             {
                 Console.WriteLine("This command is require an argument ...");
             }
+
+            //copy : copy files and directories
+            //type : show the content of the txt files
+            //rename : rename the directory or the file 
         }
 
     }
