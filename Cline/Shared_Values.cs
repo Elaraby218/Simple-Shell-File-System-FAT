@@ -40,6 +40,16 @@ namespace Cline
 
             Commands_Args.Add("cd", args);
             args.Clear();
+
+            Commands_Args.Add("import", args);
+            args.Clear();
+
+            Commands_Args.Add("export", args);
+            args.Clear();
+
+            Commands_Args.Add("del", args);
+            args.Clear();
+
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -83,6 +93,8 @@ namespace Cline
             if (Command == "import" && IsArgFound) Execute.import(Shared_Values.Arguments[0].ToString());
 
             if (Command == "export" && IsArgFound) Execute.export(Shared_Values.Arguments[0].ToString() , Shared_Values.Arguments[1].ToString());
+
+            if (Command == "del" && IsArgFound) Execute.del(Shared_Values.Arguments[0].ToString());
 
             if (IsArgFound == false)
             {
