@@ -93,5 +93,11 @@ namespace Cline
            
             FatTable.WriteFatTable();
         }
+
+        // function to show the content of the file 
+        public void ShowContent()
+        {
+            Console.WriteLine(this.content); 
+        }
     }
 }
