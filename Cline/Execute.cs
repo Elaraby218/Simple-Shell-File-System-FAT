@@ -65,7 +65,7 @@ namespace Cline
 
         public static void md(string dirName)
         {
-            if (Program.CurrentDirectory.SearchDir(dirName) == -1)
+            if (Program.CurrentDirectory.Search(dirName) == -1)
             {
                 Directory_Entry newDir = new Directory_Entry(dirName, 0x10, 0, 0);
                 Program.CurrentDirectory.DirectoryTable.Add(newDir);
@@ -88,7 +88,7 @@ namespace Cline
 
         public static void rd(string dirName)
         {
-            int id = Program.CurrentDirectory.SearchDir(dirName);
+            int id = Program.CurrentDirectory.Search(dirName);
 
             if (id != -1)
             {
@@ -114,7 +114,7 @@ namespace Cline
         public static void del(string FIleName)
         {
             // it must be in the directory that file in to be able to delete the file 
-            int idx = Program.CurrentDirectory.SearchDir(FIleName);
+            int idx = Program.CurrentDirectory.Search(FIleName);
             if (idx != -1)
             {
                 if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)
@@ -214,7 +214,7 @@ namespace Cline
 
                 foreach (var item in path)
                 {
-                    int idx = curDir.SearchDir(item);
+                    int idx = curDir.Search(item);
                     if (idx == -1)
                     {
                         Console.WriteLine($"Directory '{item}' not found in the given Path ... ");
@@ -233,7 +233,7 @@ namespace Cline
                 return;
             }
 
-            int id = Program.CurrentDirectory.SearchDir(dirName);
+            int id = Program.CurrentDirectory.Search(dirName);
             if (id != -1)
             {
                 int FirstCluster = Program.CurrentDirectory.DirectoryTable[id].starting_cluster;
@@ -260,7 +260,7 @@ namespace Cline
                 string SrcContent = File.ReadAllText(Src);
                 string FileName = Src.Substring(Src.LastIndexOf("\\") + 1);
                 int size = SrcContent.Length;
-                int idx = Program.CurrentDirectory.SearchDir(FileName);
+                int idx = Program.CurrentDirectory.Search(FileName);
 
                 if (idx == -1)
                 {
@@ -269,6 +269,7 @@ namespace Cline
                     NewFile.WriteFile();
                     Program.CurrentDirectory.DirectoryTable.Add(new Directory_Entry(FileName, 0x20, size, cluster));
                     Program.CurrentDirectory.WriteDirectory();
+                    Console.WriteLine("File imported successfully ... ");
                 }
                 else
                 {
@@ -284,7 +285,7 @@ namespace Cline
 
         public static void export(string FileName, string Dest)
         {
-            int idx = Program.CurrentDirectory.SearchDir(FileName);
+            int idx = Program.CurrentDirectory.Search(FileName);
             if (idx != -1)
             {
                 string content = string.Empty; // ensure content is not null
@@ -299,6 +300,7 @@ namespace Cline
                 file.ReadFile();
                 string filePath = Path.Combine(Dest, FileName); // create a validate path
                 File.WriteAllText(filePath, file.content);
+                Console.WriteLine("File exported successfully ... ");
             }
             else
             {
@@ -308,7 +310,7 @@ namespace Cline
 
         public static void type(string FileName)
         {
-            int idx = Program.CurrentDirectory.SearchDir(FileName);
+            int idx = Program.CurrentDirectory.Search(FileName);
             if (idx != -1) // ensure that the file is exit and the its a file not an directory
             {
                 if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)

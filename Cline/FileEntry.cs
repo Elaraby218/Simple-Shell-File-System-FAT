@@ -84,7 +84,7 @@ namespace Cline
             while (cluster != -1);
 
             string FileName = new string(this.name);
-            int idx = this.Parent.SearchDir(FileName);
+            int idx = this.Parent.Search(FileName);
             if(idx != -1)
             {
                 this.Parent.DirectoryTable.RemoveAt(idx);
