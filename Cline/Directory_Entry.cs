@@ -20,45 +20,20 @@ namespace Cline
     internal class Directory_Entry
     {
         public char[] name = new char[11];
-        public byte attribute; 
+        public byte attribute;
         public byte[] empty = new byte[12];
-        public int size; 
+        public int size;
         public int starting_cluster;
 
-        public Directory_Entry(){  }
+        public Directory_Entry() { }
 
         public void DirName(char[] name)
         {
-            int maxLength = 11; 
+            int maxLength = 11;
             int nameLength = Math.Min(name.Length, maxLength);
             Array.Copy(name, this.name, nameLength);
             // Fill the remaining space with spaces
             for (int i = nameLength; i < maxLength; i++)
-            {
-                this.name[i] = ' ';
-            }
-        }
-
-        public void FileName(char[] name, char[] ext)
-        {
-            int maxLength = 8; // Maximum length for DOS filenames
-            int extLength = 3; // Length of file extension
-
-            if (name.Length <= 7 && ext.Length == 3)
-            {
-                Array.Copy(name, 0, this.name, 0, Math.Min(name.Length, maxLength - extLength - 1));
-                this.name[Math.Min(name.Length, maxLength - extLength - 1)] = '.';
-                Array.Copy(ext, 0, this.name, Math.Min(name.Length, maxLength - extLength), Math.Min(ext.Length, extLength));
-            }
-            else
-            {
-                Array.Copy(name, 0, this.name, 0, Math.Min(name.Length, maxLength - extLength - 1));
-                this.name[Math.Min(name.Length, maxLength - extLength - 1)] = '.';
-                Array.Copy(ext, 0, this.name, maxLength - extLength, Math.Min(ext.Length, extLength));
-            }
-
-            // Fill the remaining space with spaces
-            for (int i = name.Length + ext.Length; i < maxLength; i++)
             {
                 this.name[i] = ' ';
             }
@@ -71,18 +46,10 @@ namespace Cline
             this.size = size;
 
             //this.starting_cluster = ( (starting_cluster == 0) ? FatTable.First_Ava_Block() : starting_cluster );
-            this.starting_cluster = starting_cluster; 
+            this.starting_cluster = starting_cluster;
             // when you need to put cluster fo directory call getavailblock when calling constructor ; 
+            DirName(name.ToCharArray());
 
-            if (this.attribute == 0) // file 
-            {
-                string[] filename = name.Split('.');
-                FileName(filename[0].ToCharArray(), filename[1].ToCharArray());
-            }
-            else
-            {
-                DirName(name.ToCharArray());
-            }
         }
 
 
@@ -90,9 +57,9 @@ namespace Cline
         {
             byte[] data = new byte[32];
 
-            
+
             // 0 : 10 is the name of the file
-            int nameLength = Math.Min(11,this.name.Length) ;
+            int nameLength = Math.Min(11, this.name.Length);
             for (int i = 0; i < nameLength; i++)
             {
                 data[i] = (byte)this.name[i];
@@ -113,7 +80,7 @@ namespace Cline
             return data;
         }
 
-       public Directory_Entry ByteToDirectoryEntry(byte[] data)
+        public Directory_Entry ByteToDirectoryEntry(byte[] data)
         {
 
 
@@ -125,11 +92,11 @@ namespace Cline
                 starting_cluster = BitConverter.ToInt32(data, 28),
             };
         }
-       
+
 
         public Directory_Entry GetCurBase()
         {
-            return this; 
+            return this;
         }
 
         public void ToString()
@@ -140,6 +107,6 @@ namespace Cline
             Console.WriteLine($"Starting Cluster: {this.starting_cluster}");
         }
 
-        
+
     }
 }
