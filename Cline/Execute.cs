@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -121,8 +123,8 @@ namespace Cline
                     FileEntry file = new FileEntry(
                         FileName,
                         Program.CurrentDirectory.DirectoryTable[idx].attribute,
-                        Program.CurrentDirectory.DirectoryTable[idx].size, 
-                        Program.CurrentDirectory.DirectoryTable[idx].starting_cluster, 
+                        Program.CurrentDirectory.DirectoryTable[idx].size,
+                        Program.CurrentDirectory.DirectoryTable[idx].starting_cluster,
                         Program.CurrentDirectory,
                         string.Empty
                     );
@@ -260,10 +262,10 @@ namespace Cline
                 int size = SrcContent.Length;
                 int idx = Program.CurrentDirectory.SearchDir(FileName);
 
-                if(idx == -1)
+                if (idx == -1)
                 {
                     int cluster = FatTable.First_Ava_Block();
-                    FileEntry NewFile = new FileEntry(FileName, 0x20, size, cluster, Program.CurrentDirectory , SrcContent);
+                    FileEntry NewFile = new FileEntry(FileName, 0x20, size, cluster, Program.CurrentDirectory, SrcContent);
                     NewFile.WriteFile();
                     Program.CurrentDirectory.DirectoryTable.Add(new Directory_Entry(FileName, 0x20, size, cluster));
                     Program.CurrentDirectory.WriteDirectory();
@@ -301,6 +303,37 @@ namespace Cline
             else
             {
                 Console.WriteLine("File not found");
+            }
+        }
+
+        public static void type(string FileName)
+        {
+            int idx = Program.CurrentDirectory.SearchDir(FileName);
+            if (idx != -1) // ensure that the file is exit and the its a file not an directory
+            {
+                if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)
+                {
+                    string content = null;
+                    FileEntry file = new FileEntry(
+                    FileName,
+                    Program.CurrentDirectory.DirectoryTable[idx].attribute,
+                    Program.CurrentDirectory.DirectoryTable[idx].size,
+                    Program.CurrentDirectory.DirectoryTable[idx].starting_cluster,
+                    Program.CurrentDirectory,
+                    content
+                );
+                    file.ReadFile();
+                    file.ShowContent();
+
+                }
+                else
+                {
+                    Console.WriteLine($"This comman is work only on the files ...");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"The File '{FileName}' Does not exits ...");
             }
         }
 
