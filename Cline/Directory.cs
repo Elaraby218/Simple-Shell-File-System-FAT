@@ -121,7 +121,7 @@ namespace Cline
 
         public void UpdateParent(Directory_Entry old)
         {
-            int idx = this.SearchDir(new string(old.name));
+            int idx = this.Search(new string(old.name));
             if (idx != -1)
             {
                 DirectoryTable.RemoveAt(idx);
@@ -175,7 +175,7 @@ namespace Cline
             }
 
         }
-        public int SearchDir(string name)
+        public int Search(string name)
         {
             // Ensure the name is exactly 11 characters long
             name = name.PadRight(11).Substring(0, 11);
@@ -190,22 +190,6 @@ namespace Cline
             }
             return -1;
         }
-
-        public int SearchFile(string name)
-        {
-            // Ensure the name is exactly 11 characters long
-            name = name.PadRight(11).Substring(0, 11);
-
-            // Search for the name in the directory table
-            for (int i = 0; i < DirectoryTable.Count; i++)
-            {
-                string n = new string(DirectoryTable[i].name);
-                if (n == name)
-                    return i;
-            }
-            return -1;
-        }
-
 
         public void DeleteDirectory(string DirNameD)
         {
@@ -227,7 +211,7 @@ namespace Cline
             }
             if (this.Parent != null)
             {
-                int idx = this.Parent.SearchDir(new string(this.name));
+                int idx = this.Parent.Search(new string(this.name));
                 if (idx != -1)
                 {
                     this.Parent.DirectoryTable.RemoveAt(idx);
