@@ -72,17 +72,16 @@ namespace Cline
         public void DeleteFile()
         {
             int cluster = this.starting_cluster;
-            int nextCluster = FatTable.GetVal(cluster);
+            int nextCluster;
             do
             {
+                nextCluster = FatTable.GetVal(cluster);
                 FatTable.SetVal(cluster, 0);
-                // i delete the data from the disk becaues override may make conflicts 
+                // Delete the data from the disk because overriding may cause conflicts.
                 Virtual_Disk.WriteBlock(Virtual_Disk.EmptyBlock, cluster);
                 cluster = nextCluster;
-                nextCluster = FatTable.GetVal(cluster);
             }
-            while (nextCluster != -1);
-            FatTable.SetVal(cluster, 0);
+            while (cluster != -1);
 
             string FileName = new string(this.name);
             int idx = this.Parent.SearchDir(FileName);
