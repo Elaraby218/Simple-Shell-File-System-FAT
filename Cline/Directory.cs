@@ -178,12 +178,26 @@ namespace Cline
         public int Search(string name)
         {
             // Ensure the name is exactly 11 characters long
-            name = name.PadRight(11).Substring(0, 11);
+            char[] NameinArr = new char[11];
+            for (int i = 0; i < 11 && i < name.Count(); i++)
+            {
+                NameinArr[i] = name[i];
+            }
 
             // Search for the name in the directory table
             for (int i = 0; i < DirectoryTable.Count; i++)
             {
-                if (DirectoryTable[i].name.SequenceEqual(name))
+                bool match = true;
+                for (int j = 0; j < 11 && j < DirectoryTable[i].name.Length; j++)
+                {
+                    if (DirectoryTable[i].name[j] != NameinArr[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
                 {
                     return i;
                 }
