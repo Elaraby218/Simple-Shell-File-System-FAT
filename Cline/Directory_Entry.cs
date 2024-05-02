@@ -31,12 +31,7 @@ namespace Cline
         {
             int maxLength = 11;
             int nameLength = Math.Min(name.Length, maxLength);
-            Array.Copy(name, this.name, nameLength);
-            // Fill the remaining space with spaces
-            for (int i = nameLength; i < maxLength; i++)
-            {
-                this.name[i] = ' ';
-            }
+            Array.Copy(name, this.name, nameLength);   
         }
 
         // i changed the function of name to fill the empty cells with spaces 

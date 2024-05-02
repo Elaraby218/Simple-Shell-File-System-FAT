@@ -53,6 +53,9 @@ namespace Cline
             Commands_Args.Add("type", args);
             args.Clear(); 
 
+            Commands_Args.Add("rename", args);
+            args.Clear();
+
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -88,27 +91,30 @@ namespace Cline
 
             bool IsArgFound = (Shared_Values.Arguments.Count > 0);
             bool TwoArgs = (Shared_Values.Arguments.Count == 2);
-            if (Command == "md" && IsArgFound) Execute.md(Shared_Values.Arguments[0].ToString());
+            string firstarg = ((Command=="export")?"Src":"Old Name") , secondarg = ((Command == "export") ? "Dest" : "New Name");
+            if (Command == "md" && IsArgFound) { Execute.md(Shared_Values.Arguments[0].ToString()); return; }
 
-            if (Command == "rd" && IsArgFound) Execute.rd(Shared_Values.Arguments[0].ToString());
+            if (Command == "rd" && IsArgFound) { Execute.rd(Shared_Values.Arguments[0].ToString()); return; }
 
-            if (Command == "cd" && IsArgFound) Execute.cd(Shared_Values.Arguments[0].ToString());
+            if (Command == "cd" && IsArgFound) { Execute.cd(Shared_Values.Arguments[0].ToString()); return; }
 
-            if (Command == "import" && IsArgFound) Execute.import(Shared_Values.Arguments[0].ToString());
+            if (Command == "import" && IsArgFound) { Execute.import(Shared_Values.Arguments[0].ToString()); return; }
 
-            if (Command == "export" && TwoArgs) Execute.export(Shared_Values.Arguments[0].ToString() , Shared_Values.Arguments[1].ToString());
+            if (Command == "export" && TwoArgs) { Execute.export(Shared_Values.Arguments[0].ToString(), Shared_Values.Arguments[1].ToString()); return; }
 
-            if (Command == "del" && TwoArgs) Execute.del(Shared_Values.Arguments[0].ToString());
-           
-            if (Command == "type" && IsArgFound) Execute.type(Shared_Values.Arguments[0].ToString()); 
+            if (Command == "del" && TwoArgs) { Execute.del(Shared_Values.Arguments[0].ToString()); return; }
 
-            if ( !IsArgFound && !TwoArgs)
+            if (Command == "type" && IsArgFound) { Execute.type(Shared_Values.Arguments[0].ToString()); return; }
+
+            if (Command == "rename" && TwoArgs) { Execute.rename(Shared_Values.Arguments[0].ToString(), Shared_Values.Arguments[1].ToString()); return; }
+
+            if ( !IsArgFound && !TwoArgs && Command!="export" && Command!="rename")
             {
                 Console.WriteLine("This command is require an argument ...");
             }
             else
             {
-                Console.WriteLine("This command requires two args 'Src' 'Dest' ...");
+                Console.WriteLine($"This command requires two args '{firstarg}' '{secondarg}' ...");
             }
 
             //copy : copy files and directories

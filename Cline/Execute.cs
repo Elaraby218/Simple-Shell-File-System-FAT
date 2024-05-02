@@ -152,13 +152,13 @@ namespace Cline
                 if (Program.CurrentDirectory.DirectoryTable[i].attribute == 0x10)
                 {
                     name = new string(Program.CurrentDirectory.DirectoryTable[i].name);
-                    Console.WriteLine($"{name,-50} <DIR>");
+                    Console.WriteLine($"{name.TrimEnd('\0'),-50} <DIR>");
                     NumOfFolders++;
                 }
                 else
                 {
                     name = new string(Program.CurrentDirectory.DirectoryTable[i].name);
-                    Console.Write($"{name,-50} <FILE>");
+                    Console.Write($"{name.TrimEnd('\0'),-50} <FILE>");
                     Console.WriteLine($"{string.Empty,-20}{Program.CurrentDirectory.DirectoryTable[i].size} bytes");
                     NumOfFiles++;
                     Totalsize += Program.CurrentDirectory.DirectoryTable[i].size;
@@ -336,6 +336,52 @@ namespace Cline
             else
             {
                 Console.WriteLine($"The File '{FileName}' Does not exits ...");
+            }
+        }
+
+        public static void rename(string OldName, string NewName)
+        {
+            int idx = Program.CurrentDirectory.Search(OldName);
+            int idx2 = Program.CurrentDirectory.Search(NewName);
+            string TypeOfFile = (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x10) ? "Directory" : "File";
+            if (idx != -1)
+            {
+                if (idx2 != -1)
+                {
+                    Console.WriteLine($"Another {TypeOfFile} hodl the same name {NewName} ... ");
+                    return;
+                }
+                if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x10)
+                {
+                    if (NewName.Length > 11)
+                    {
+                        Console.WriteLine("The name of the directory is too long ... ");
+                        return;
+                    }
+                    Program.CurrentDirectory.DirectoryTable[idx].name = NewName.ToCharArray();
+                    Program.CurrentDirectory.WriteDirectory();
+                    Console.WriteLine($"Directory '{OldName}' renamed to '{NewName}' successfully ... ");
+                }
+                else
+                {
+                    if (NewName.Length > 11)
+                    {
+                        Console.WriteLine("The name of the file is too long ... ");
+                        return;
+                    }
+                    if (!NewName.EndsWith(".txt"))
+                    {
+                        Console.WriteLine("The file must be end with .txt ... ");
+                        return;
+                    }
+                    Program.CurrentDirectory.DirectoryTable[idx].name = NewName.ToCharArray();
+                    Program.CurrentDirectory.WriteDirectory();
+                    Console.WriteLine($"File '{OldName}' renamed to '{NewName}' successfully ... ");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"File '{OldName}' not found ... ");
             }
         }
 
