@@ -92,6 +92,7 @@ namespace Cline
             if (dirName.EndsWith(".txt"))
             {
                 Console.WriteLine("This command is work only on the directories ... ");
+                return;
             }
             int id = Program.CurrentDirectory.Search(dirName);
             if (id != -1)
@@ -148,6 +149,7 @@ namespace Cline
             else
             {
                 Console.WriteLine("This command is work only on the files ... ");
+                return;
             }
         }
 
