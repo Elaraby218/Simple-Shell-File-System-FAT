@@ -90,12 +90,16 @@ namespace Cline
         public static void rd(string dirName)
         {
             int id = Program.CurrentDirectory.Search(dirName);
-
             if (id != -1)
             {
+                Directory Dir = new Directory(new string(Program.CurrentDirectory.DirectoryTable[id].name),
+                                              Program.CurrentDirectory.DirectoryTable[id].attribute,
+                                              Program.CurrentDirectory.DirectoryTable[id].size,
+                                              Program.CurrentDirectory.DirectoryTable[id].starting_cluster,
+                                              Program.CurrentDirectory);
+                DeleteFilesOnly(Dir);
                 int FirstCluster = Program.CurrentDirectory.DirectoryTable[id].starting_cluster;
                 int FileSize = Program.CurrentDirectory.DirectoryTable[id].size;
-
                 // Create a new Directory object
                 Directory directory = new Directory(dirName, 0x10,
                         FileSize, FirstCluster, Program.CurrentDirectory);
@@ -103,12 +107,40 @@ namespace Cline
                 // Delete the directory
                 directory.DeleteDirectory(dirName); // Assuming DeleteDirectory doesn't need dirName argument
                 Program.CurrentDirectory.WriteDirectory();
-
                 Console.WriteLine($"Directory '{dirName}' deleted successfully");
             }
             else
             {
                 Console.WriteLine($"Directory '{dirName}' not found");
+            }
+        }
+
+        private static void DeleteFilesOnly(Directory Dir)
+        {
+
+            Dir.ReadDirectory();
+            foreach (var item in Dir.DirectoryTable)
+            {
+                if (item.attribute == 0x20)
+                {
+                    FileEntry file = new FileEntry(
+                                                    new string(item.name),
+                                                    item.attribute,
+                                                    item.size,
+                                                    item.starting_cluster,
+                                                    Dir,
+                                                    string.Empty);
+                    file.DeleteFile();
+                }
+                else
+                {
+                    Directory directory = new Directory(new string(item.name),
+                                                        item.attribute,
+                                                        item.size,
+                                                        item.starting_cluster,
+                                                        Dir);
+                    DeleteFilesOnly(directory);
+                }
             }
         }
 
@@ -461,6 +493,7 @@ namespace Cline
             }
             return curDir;
         }
+
 
         //
         // copy 

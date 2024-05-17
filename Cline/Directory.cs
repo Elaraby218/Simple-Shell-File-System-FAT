@@ -209,7 +209,8 @@ namespace Cline
         {
             this.ReadDirectory();
             // if condition could be deleted
-            if (this.DirectoryTable.Count > 0)
+
+            if (this.DirectoryTable.Count > 0 && this.attribute==0x10)
             {
                 while (this.DirectoryTable.Count > 0)
                 {
