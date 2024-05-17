@@ -116,7 +116,7 @@ namespace Cline
         public static void del(string FIleName)
         {
             // it must be in the directory that file in to be able to delete the file 
-            if (FIleName.EndsWith(".txt") == false)
+            if (FIleName.EndsWith(".txt"))
             {
 
                 int idx = Program.CurrentDirectory.Search(FIleName);
