@@ -205,40 +205,52 @@ namespace Cline
             return -1;
         }
 
-        public void DeleteDirectory(string DirNameD)
+        public void DeleteDirectory(Directory Dir)
         {
-            this.ReadDirectory();
+            Dir.ReadDirectory();
             // if condition could be deleted
-
-            if (this.DirectoryTable.Count > 0 && this.attribute==0x10)
+            // dont forget to delte the condition
+            if (Dir.DirectoryTable.Count > 0 && Dir.attribute == 0x10)
             {
-                while (this.DirectoryTable.Count > 0)
+                while (Dir.DirectoryTable.Count > 0)
                 {
-                    Directory todel = new Directory(new string(this.DirectoryTable[0].name),
-                                                                   this.DirectoryTable[0].attribute,
-                                                                                    this.DirectoryTable[0].size,
-                                                                                                this.DirectoryTable[0].starting_cluster, this);
-                    if (todel.attribute == 0x10)
+                    if (Dir.DirectoryTable[0].attribute == 0x10)
                     {
-                        todel.DeleteDirectory(new string(todel.name));
+                        Directory todel = new Directory(new string(Dir.DirectoryTable[0].name),
+                                                                       Dir.DirectoryTable[0].attribute,
+                                                                       Dir.DirectoryTable[0].size,
+                                                                       Dir.DirectoryTable[0].starting_cluster,
+                                                                                   Dir);
+                        todel.DeleteDirectory(todel);
+
+                    }
+                    else
+                    {
+                        FileEntry file = new FileEntry(
+                                                        new string(Dir.DirectoryTable[0].name),
+                                                        Dir.DirectoryTable[0].attribute,
+                                                        Dir.DirectoryTable[0].size,
+                                                        Dir.DirectoryTable[0].starting_cluster,
+                                                        Dir,
+                                                        string.Empty);
+                        file.DeleteFile();
                     }
                 }
 
             }
-            if (this.Parent != null)
+            if (Dir.Parent != null)
             {
-                int idx = this.Parent.Search(new string(this.name));
+                int idx = Dir.Parent.Search(new string(Dir.name));
                 if (idx != -1)
                 {
-                    this.Parent.DirectoryTable.RemoveAt(idx);
-                    this.Parent.WriteDirectory();
+                    Dir.Parent.DirectoryTable.RemoveAt(idx);
+                    Dir.Parent.WriteDirectory();
                 }
             }
 
-            Virtual_Disk.WriteBlock(Virtual_Disk.EmptyBlock, this.starting_cluster);
-            FatTable.SetVal(this.starting_cluster, 0);
+            Virtual_Disk.WriteBlock(Virtual_Disk.EmptyBlock, Dir.starting_cluster);
+            FatTable.SetVal(Dir.starting_cluster, 0);
             FatTable.WriteFatTable();
-
             return;
         }
 
@@ -255,7 +267,7 @@ namespace Cline
                     entry.size,
                     entry.starting_cluster);
                 destDirectory.DirectoryTable.Add(newEntry);
-                if (entry.attribute == 0x10) 
+                if (entry.attribute == 0x10)
                 {
                     var subDirectory = new Directory(
                         new string(entry.name),
@@ -268,10 +280,10 @@ namespace Cline
                         new string(entry.name),
                         entry.attribute,
                         entry.size,
-                        FatTable.First_Ava_Block(), 
+                        FatTable.First_Ava_Block(),
                         destDirectory));
                 }
-               
+
             }
             destDirectory.WriteDirectory();
         }

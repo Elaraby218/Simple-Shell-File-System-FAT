@@ -97,15 +97,7 @@ namespace Cline
                                               Program.CurrentDirectory.DirectoryTable[id].size,
                                               Program.CurrentDirectory.DirectoryTable[id].starting_cluster,
                                               Program.CurrentDirectory);
-                DeleteFilesOnly(Dir);
-                int FirstCluster = Program.CurrentDirectory.DirectoryTable[id].starting_cluster;
-                int FileSize = Program.CurrentDirectory.DirectoryTable[id].size;
-                // Create a new Directory object
-                Directory directory = new Directory(dirName, 0x10,
-                        FileSize, FirstCluster, Program.CurrentDirectory);
-
-                // Delete the directory
-                directory.DeleteDirectory(dirName); // Assuming DeleteDirectory doesn't need dirName argument
+                Dir.DeleteDirectory(Dir); 
                 Program.CurrentDirectory.WriteDirectory();
                 Console.WriteLine($"Directory '{dirName}' deleted successfully");
             }
@@ -115,35 +107,7 @@ namespace Cline
             }
         }
 
-        private static void DeleteFilesOnly(Directory Dir)
-        {
-
-            Dir.ReadDirectory();
-            foreach (var item in Dir.DirectoryTable)
-            {
-                if (item.attribute == 0x20)
-                {
-                    FileEntry file = new FileEntry(
-                                                    new string(item.name),
-                                                    item.attribute,
-                                                    item.size,
-                                                    item.starting_cluster,
-                                                    Dir,
-                                                    string.Empty);
-                    file.DeleteFile();
-                }
-                else
-                {
-                    Directory directory = new Directory(new string(item.name),
-                                                        item.attribute,
-                                                        item.size,
-                                                        item.starting_cluster,
-                                                        Dir);
-                    DeleteFilesOnly(directory);
-                }
-            }
-        }
-
+       
         public static void del(string FIleName)
         {
             // it must be in the directory that file in to be able to delete the file 
