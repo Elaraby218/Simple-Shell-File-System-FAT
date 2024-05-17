@@ -89,6 +89,10 @@ namespace Cline
 
         public static void rd(string dirName)
         {
+            if(dirName.EndsWith(".txt"))
+            {
+                Console.WriteLine("This command is work only on the directories ... ");
+            }
             int id = Program.CurrentDirectory.Search(dirName);
             if (id != -1)
             {

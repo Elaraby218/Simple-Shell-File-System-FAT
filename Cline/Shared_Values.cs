@@ -101,9 +101,9 @@ namespace Cline
             string firstarg = ((Command == "export") ? "Src" : (Command == "copy") ? "Copy Name" : "Old Name"),
                   secondarg = ((Command == "export") ? "Dest" : (Command == "copy") ? "Destination" : "New Name");
 
-            if (Command == "md" && IsArgFound) { Execute.md(Shared_Values.Arguments[0].ToString()); openTxtFile(); return; }
+            if (Command == "md" && IsArgFound) { Execute.md(Shared_Values.Arguments[0].ToString());  return; }
 
-            if (Command == "rd" && IsArgFound) { Execute.rd(Shared_Values.Arguments[0].ToString()); openTxtFile(); return; }
+            if (Command == "rd" && IsArgFound) { Execute.rd(Shared_Values.Arguments[0].ToString());  return; }
 
             if (Command == "cd" && IsArgFound) { Execute.cd(Shared_Values.Arguments[0].ToString()); return; }
 
@@ -111,7 +111,7 @@ namespace Cline
 
             if (Command == "export" && TwoArgs) { Execute.export(Shared_Values.Arguments[0].ToString(), Shared_Values.Arguments[1].ToString()); return; }
 
-            if (Command == "del" && IsArgFound) { Execute.del(Shared_Values.Arguments[0].ToString()); openTxtFile(); return;  }
+            if (Command == "del" && IsArgFound) { Execute.del(Shared_Values.Arguments[0].ToString()); return;  }
 
             if (Command == "type" && IsArgFound) { Execute.type(Shared_Values.Arguments[0].ToString()); return; }
 
