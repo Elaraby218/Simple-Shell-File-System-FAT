@@ -33,7 +33,7 @@ namespace Cline
                     fs.SafeFileHandle.Close(); 
                 }
                 FatTable.Initialize();
-                Root = new Directory(filePath, 0x10, 0, 5, null);
+                Root = new Directory("root", 0x10, 0, 5, null);
                 Root.WriteDirectory();
                 FatTable.SetVal(5, -1);
                 FatTable.WriteFatTable();      
@@ -43,7 +43,7 @@ namespace Cline
             {
 
                 FatTable.ReadFatTable();
-                Root = new Directory(filePath, 0x10, 0, 5, null);
+                Root = new Directory("root", 0x10, 0, 5, null);
                 Root.ReadDirectory();   // it will be implemented later
                 Program.CurrentDirectory = Root;
 

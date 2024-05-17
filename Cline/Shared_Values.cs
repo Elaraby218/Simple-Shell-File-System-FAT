@@ -56,6 +56,11 @@ namespace Cline
             Commands_Args.Add("rename", args);
             args.Clear();
 
+            Commands_Args.Add("copy", args);
+            args.Clear();
+
+
+
         }
 
         public static void Rmv_spcs(string inputt_)
@@ -91,7 +96,9 @@ namespace Cline
 
             bool IsArgFound = (Shared_Values.Arguments.Count > 0);
             bool TwoArgs = (Shared_Values.Arguments.Count == 2);
-            string firstarg = ((Command=="export")?"Src":"Old Name") , secondarg = ((Command == "export") ? "Dest" : "New Name");
+            string firstarg = ((Command=="export")?"Src":(Command=="copy")? "Copy Name" : "Old Name") , 
+                  secondarg = ((Command == "export")?"Dest": (Command=="copy")?"Destination" : "New Name");
+
             if (Command == "md" && IsArgFound) { Execute.md(Shared_Values.Arguments[0].ToString()); return; }
 
             if (Command == "rd" && IsArgFound) { Execute.rd(Shared_Values.Arguments[0].ToString()); return; }
@@ -102,13 +109,14 @@ namespace Cline
 
             if (Command == "export" && TwoArgs) { Execute.export(Shared_Values.Arguments[0].ToString(), Shared_Values.Arguments[1].ToString()); return; }
 
-            if (Command == "del" && TwoArgs) { Execute.del(Shared_Values.Arguments[0].ToString()); return; }
+            if (Command == "del" && IsArgFound) { Execute.del(Shared_Values.Arguments[0].ToString()); return; }
 
             if (Command == "type" && IsArgFound) { Execute.type(Shared_Values.Arguments[0].ToString()); return; }
 
             if (Command == "rename" && TwoArgs) { Execute.rename(Shared_Values.Arguments[0].ToString(), Shared_Values.Arguments[1].ToString()); return; }
 
-            if ( !IsArgFound && !TwoArgs && Command!="export" && Command!="rename")
+            if (Command == "copy" && IsArgFound) { Execute.copy(Shared_Values.Arguments[0].ToString()); return;}
+            if ( !IsArgFound && !TwoArgs && Command!="export" && Command!="rename" )
             {
                 Console.WriteLine("This command is require an argument ...");
             }

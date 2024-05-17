@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
@@ -173,6 +174,8 @@ namespace Cline
         public static void cd(string dirName)
         {
 
+            List<string> path = dirName.Split('\\').ToList();
+            Directory curDir;
             if (dirName == "..")
             {
 
@@ -188,10 +191,36 @@ namespace Cline
                 return;
             }
 
+            if (path[0] == "root")
+            {
+                path.RemoveAt(0);
+                curDir = Virtual_Disk.Root;
+                curDir.ReadDirectory();
+                string newpath = "root";
+
+                foreach (var item in path)
+                {
+                    int idx = curDir.Search(item);
+                    if (idx == -1)
+                    {
+                        Console.WriteLine($"Directory '{item}' not found in the given Path ... ");
+                        return;
+                    }
+                    Directory d = new Directory(item, 0x10, curDir.DirectoryTable[idx].size,
+                                                              curDir.DirectoryTable[idx].starting_cluster, curDir);
+                    curDir = d;
+                    curDir.ReadDirectory();
+                    newpath += "\\";
+                    newpath += item;
+                }
+                Program.CurrentDirectory = curDir;
+                Program.Path = newpath;
+                Program.CurrentDirectory.ReadDirectory();
+                return;
+
+            }
             if (dirName.Contains('\\'))
             {
-                List<string> path = dirName.Split('\\').ToList();
-                Directory curDir;
 
                 if (dirName == "\\")
                 {
@@ -384,7 +413,58 @@ namespace Cline
                 Console.WriteLine($"File '{OldName}' not found ... ");
             }
         }
+
+        public static void copy(string Dest)
+        {
+            Directory DestDir = GetDirByPath(Dest);
+            if (DestDir.attribute == 0x50)
+            {
+                Console.WriteLine($"The Directory '{DestDir.name.ToString()}' in destination path is not found ... ");
+                return;
+            }
+            Program.CurrentDirectory.CopyDirectory(DestDir);
+        }
+
+        private static Directory GetDirByPath(string path) // absolute path
+        {
+            if (path == "\\")
+            {
+                return Virtual_Disk.Root;
+            }
+
+            string[] pathComponents = path.Split(Path.DirectorySeparatorChar);
+            Directory curDir = Virtual_Disk.Root;
+
+            foreach (string dirName in pathComponents)
+            {
+                if (string.IsNullOrEmpty(dirName))
+                {
+                    continue;
+                }
+
+                int idx = curDir.Search(dirName);
+                if (idx == -1)
+                {
+                    curDir.attribute = 0x50; // not found 
+                    return curDir;
+                }
+                else
+                {
+                    curDir = new Directory(
+                                        dirName,
+                                        curDir.DirectoryTable[idx].attribute,
+                                        curDir.DirectoryTable[idx].size,
+                                        curDir.DirectoryTable[idx].starting_cluster,
+                                        curDir
+                                            );
+                }
+            }
+            return curDir;
+        }
+
         //
+        // copy 
+        // 
 
     }
 }

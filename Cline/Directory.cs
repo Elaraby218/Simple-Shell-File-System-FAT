@@ -208,6 +208,7 @@ namespace Cline
         public void DeleteDirectory(string DirNameD)
         {
             this.ReadDirectory();
+            // if condition could be deleted
             if (this.DirectoryTable.Count > 0)
             {
                 while (this.DirectoryTable.Count > 0)
@@ -238,6 +239,40 @@ namespace Cline
             FatTable.WriteFatTable();
 
             return;
+        }
+
+
+        public void CopyDirectory(Directory destDirectory)
+        {
+            this.ReadDirectory();
+
+            foreach (var entry in this.DirectoryTable)
+            {
+                var newEntry = new Directory_Entry(
+                    new string(entry.name),
+                    entry.attribute,
+                    entry.size,
+                    entry.starting_cluster);
+                destDirectory.DirectoryTable.Add(newEntry);
+                if (entry.attribute == 0x10) 
+                {
+                    var subDirectory = new Directory(
+                        new string(entry.name),
+                        entry.attribute,
+                        entry.size,
+                        entry.starting_cluster,
+                        destDirectory);
+
+                    subDirectory.CopyDirectory(new Directory(
+                        new string(entry.name),
+                        entry.attribute,
+                        entry.size,
+                        FatTable.First_Ava_Block(), 
+                        destDirectory));
+                }
+               
+            }
+            destDirectory.WriteDirectory();
         }
 
     }
