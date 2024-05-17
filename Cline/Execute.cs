@@ -89,7 +89,7 @@ namespace Cline
 
         public static void rd(string dirName)
         {
-            if(dirName.EndsWith(".txt"))
+            if (dirName.EndsWith(".txt"))
             {
                 Console.WriteLine("This command is work only on the directories ... ");
             }
@@ -101,7 +101,7 @@ namespace Cline
                                               Program.CurrentDirectory.DirectoryTable[id].size,
                                               Program.CurrentDirectory.DirectoryTable[id].starting_cluster,
                                               Program.CurrentDirectory);
-                Dir.DeleteDirectory(Dir); 
+                Dir.DeleteDirectory(Dir);
                 Program.CurrentDirectory.WriteDirectory();
                 Console.WriteLine($"Directory '{dirName}' deleted successfully");
             }
@@ -111,35 +111,43 @@ namespace Cline
             }
         }
 
-       
+
         public static void del(string FIleName)
         {
             // it must be in the directory that file in to be able to delete the file 
-            int idx = Program.CurrentDirectory.Search(FIleName);
-            if (idx != -1)
+            if (FIleName.EndsWith(".txt") == false)
             {
-                if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)
+
+                int idx = Program.CurrentDirectory.Search(FIleName);
+                if (idx != -1)
                 {
-                    string FileName = new string(Program.CurrentDirectory.DirectoryTable[idx].name);
-                    FileEntry file = new FileEntry(
-                        FileName,
-                        Program.CurrentDirectory.DirectoryTable[idx].attribute,
-                        Program.CurrentDirectory.DirectoryTable[idx].size,
-                        Program.CurrentDirectory.DirectoryTable[idx].starting_cluster,
-                        Program.CurrentDirectory,
-                        string.Empty
-                    );
-                    file.DeleteFile();
-                    Console.WriteLine($"File '{FIleName}' deleted successfully ... ");
+                    if (Program.CurrentDirectory.DirectoryTable[idx].attribute == 0x20)
+                    {
+                        string FileName = new string(Program.CurrentDirectory.DirectoryTable[idx].name);
+                        FileEntry file = new FileEntry(
+                            FileName,
+                            Program.CurrentDirectory.DirectoryTable[idx].attribute,
+                            Program.CurrentDirectory.DirectoryTable[idx].size,
+                            Program.CurrentDirectory.DirectoryTable[idx].starting_cluster,
+                            Program.CurrentDirectory,
+                            string.Empty
+                        );
+                        file.DeleteFile();
+                        Console.WriteLine($"File '{FIleName}' deleted successfully ... ");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"'{FIleName}' is not a file ... ");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"'{FIleName}' is not a file ... ");
+                    Console.WriteLine($"File '{FIleName}' not found ... ");
                 }
             }
             else
             {
-                Console.WriteLine($"File '{FIleName}' not found ... ");
+                Console.WriteLine("This command is work only on the files ... ");
             }
         }
 
