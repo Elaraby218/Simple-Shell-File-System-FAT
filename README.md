@@ -75,7 +75,8 @@ Contributions are welcome! Please fork this repository and submit a pull request
 
 ## Contact
 
-If you have any questions or feedback, feel free to reach out to me at [LinkedIn]([mailto:your-email@example.com](https://www.linkedin.com/in/mohammed-ramadan-elaraby-097245242/)).
+If you have any questions or feedback, feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/mohammed-ramadan-elaraby-097245242/) or via [email](mohtawaelaraby@gmail.com).
+
 
 ---
 
